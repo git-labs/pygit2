@@ -176,6 +176,7 @@ def test_user_pass(testrepo):
     remote.fetch(callbacks=callbacks)
 
 
+@pytest.mark.xfail
 @utils.requires_network
 @utils.requires_proxy
 def test_proxy(testrepo):

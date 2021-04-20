@@ -32,25 +32,28 @@ import stat
 import sys
 import tarfile
 
-import pygit2
+# Requirements
+import psutil
 import pytest
 
+# Pygit2
+import pygit2
 
 
 try:
     socket.gethostbyname('github.com')
+    has_network = True
 except socket.gaierror:
     has_network = False
-else:
-    has_network = True
 
 requires_network = pytest.mark.skipif(
     not has_network,
     reason='Requires network'
 )
 
-with socket.socket(socket.AF_INET6, socket.SOCK_STREAM) as sock:
-    has_proxy = sock.connect_ex(('', 8888)) == 0
+
+has_proxy = any(x for x in psutil.net_connections() if x.status == psutil.CONN_LISTEN and x.laddr.port == 8888)
+
 
 requires_proxy = pytest.mark.skipif(
     not has_proxy,
